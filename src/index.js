@@ -5,7 +5,8 @@ const path = require('path');
 const CLINET_SECRET = path.resolve(__dirname, '../client_secret.json');
 const TOKEN_PATH = path.resolve(__dirname, '../token.json');
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
-const { processor } = require('./utils/dataProcessor');
+const { writeFile } = require('./utils/index');
+const { processor } = require('./utils/data-processor');
 
 function getNewToken (oAuth2Client, callback) {
   const authUrl = oAuth2Client.generateAuthUrl({
@@ -53,7 +54,9 @@ function listMajors (auth) {
     if (rows.length) {
       // Print columns A and E, which correspond to indices 0 and 4.
       const result = processor(rows);
-      console.log('result: ', result)
+      writeFile({
+        result
+      });
     } else {
       console.log('No data found.');
     }

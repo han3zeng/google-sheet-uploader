@@ -4,9 +4,11 @@
   "description": "fetch data from google sheet and upload it to s3 server",
   "main": "src/index.js",
   "dependencies": {
+    "aws-sdk": "^2.673.0",
     "dotenv": "^8.2.0",
     "googleapis": "^50.0.0",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "eslint": "^6.4.0",
@@ -18,7 +20,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./src/index.js"
+    "start": "node ./src/index.js",
+    "upload": "node ./src/utils/uploader.js"
   },
   "repository": {
     "type": "git",

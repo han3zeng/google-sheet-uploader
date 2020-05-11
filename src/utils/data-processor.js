@@ -55,14 +55,6 @@ const createBlock = ({
   };
 };
 
-/**
- *
- * @param {Object[]} results - The block of blocklists.
- * @param {} results[].dateTime -
- * @param {Object[]} block - the block
- * @param {string} block.dateTime - dateTime of block
- * @param {string} employees[].department - The employee's department.
- */
 function processor (rows) {
   const results = [];
   let content = [];
