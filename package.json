@@ -1,0 +1,38 @@
+{
+  "name": "google-sheet-uploader",
+  "version": "1.0.0",
+  "description": "fetch data from google sheet and upload it to s3 server",
+  "main": "src/index.js",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "googleapis": "^50.0.0",
+    "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "eslint": "^6.4.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanyulo/google-sheet-uploader.git"
+  },
+  "keywords": [
+    "google",
+    "sheet",
+    "s3"
+  ],
+  "author": "Hanyulo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hanyulo/google-sheet-uploader/issues"
+  },
+  "homepage": "https://github.com/hanyulo/google-sheet-uploader#readme"
+}
