@@ -7,6 +7,7 @@ const TOKEN_PATH = path.resolve(__dirname, '../token.json');
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
 const { writeFile } = require('./utils/index');
 const { processor } = require('./utils/data-processor');
+const logger = require('./utils/create-logger');
 
 function getNewToken (oAuth2Client, callback) {
   const authUrl = oAuth2Client.generateAuthUrl({
@@ -63,7 +64,28 @@ function listMajors (auth) {
   });
 }
 
-fs.readFile(CLINET_SECRET, (err, content) => {
-  if (err) return console.log('Error loading client secret file:', err);
-  authorize(JSON.parse(content), listMajors);
-});
+try {
+  (function createDirectories () {
+    const distTargetDirectory = path.resolve(__dirname, '../dist');
+    const logsTargetDirectory = path.resolve(__dirname, '../logs');
+
+    const allDirs = [distTargetDirectory, logsTargetDirectory];
+
+    allDirs.forEach((target) => {
+      if (!fs.existsSync(target)) {
+        fs.mkdir(target, { recursive: true }, (err) => {
+          if (err) throw err;
+        });
+      }
+    });
+  })();
+  fs.readFile(CLINET_SECRET, (err, content) => {
+    if (err) return console.log('Error loading client secret file:', err);
+    authorize(JSON.parse(content), listMajors);
+  });
+} catch (e) {
+  logger.log({
+    level: 'error',
+    message: `top level - exception ${e}`
+  });
+};
