@@ -7,11 +7,11 @@ const _ = {
 const TIME = 'time';
 const TITLE = 'title';
 const TYPE = 'type';
-const CONTENT = 'content';
+const TEXT = 'text';
 const URL = 'url';
 const CAPTION = 'caption';
 
-const KEYS = [TIME, TITLE, TYPE, CONTENT, URL, CAPTION];
+const KEYS = [TIME, TITLE, TYPE, TEXT, URL, CAPTION];
 
 
 const TYPES = {
@@ -23,7 +23,7 @@ const TYPES = {
 
 const createElement = ({
   type,
-  content,
+  text,
   url,
   caption
 }) => {
@@ -37,7 +37,7 @@ const createElement = ({
   if (type === TYPES.text) {
     return {
       type,
-      content
+      text
     };
   }
   return undefined;
@@ -88,7 +88,7 @@ function processor (rows) {
         if (row[KEYS.indexOf(TYPE)] !== TYPES.title) {
           const elem = createElement({
             type: row[KEYS.indexOf(TYPE)],
-            content: row[KEYS.indexOf(CONTENT)],
+            text: row[KEYS.indexOf(TEXT)],
             url: row[KEYS.indexOf(URL)],
             caption: row[KEYS.indexOf(CAPTION)]
           });
