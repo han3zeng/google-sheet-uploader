@@ -6,7 +6,7 @@ const CLINET_SECRET = path.resolve(__dirname, '../client_secret.json');
 const TOKEN_PATH = path.resolve(__dirname, '../token.json');
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
 const { writeFile } = require('./utils/index');
-const { processor } = require('./utils/data-processor');
+const { processor, takeawayProcessor } = require('./utils/data-processor');
 const logger = require('./utils/create-logger');
 
 function getNewToken (oAuth2Client, callback) {
@@ -46,6 +46,7 @@ function authorize (credentials, callback) {
 
 function listMajors (auth) {
   const sheets = google.sheets({ version: 'v4', auth });
+  // Content
   sheets.spreadsheets.values.get({
     spreadsheetId: '14MvZOZJMpxPXyzZI0UUcvGz6Bmti_CA-_zlNZDIgMf0',
     range: 'Content!A:F'
@@ -56,7 +57,26 @@ function listMajors (auth) {
       // Print columns A and E, which correspond to indices 0 and 4.
       const result = processor(rows);
       writeFile({
-        result
+        result,
+        fileName: 'content'
+      });
+    } else {
+      console.log('No data found.');
+    }
+  });
+  // Takeaway
+  sheets.spreadsheets.values.get({
+    spreadsheetId: '14MvZOZJMpxPXyzZI0UUcvGz6Bmti_CA-_zlNZDIgMf0',
+    range: 'Takeaway!A:C'
+  }, (err, res) => {
+    if (err) return console.log('The API returned an error: ' + err);
+    const rows = res.data.values;
+    if (rows.length) {
+      // Print columns A and E, which correspond to indices 0 and 4.
+      const result = takeawayProcessor(rows);
+      writeFile({
+        result,
+        fileName: 'takeaway'
       });
     } else {
       console.log('No data found.');

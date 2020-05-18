@@ -102,6 +102,26 @@ function processor (rows) {
   return _.orderBy(results, (block) => block.timestamp, ['desc']);
 }
 
+function takeawayProcessor (rows) {
+  const res = [];
+  const TIME = 'time';
+  const TITLE = 'title';
+  const TYPE = 'TYPE';
+  const keys = [TIME, TITLE, TYPE];
+  rows.forEach((row, index) => {
+    if (index !== 0) {
+      res.push({
+        time: row[keys.indexOf(TIME)],
+        timestamp: (new Date(row[keys.indexOf(TIME)])).getTime(),
+        title: row[keys.indexOf(TITLE)],
+        type: row[keys.indexOf(TYPE)]
+      });
+    }
+  });
+  return _.orderBy(res, (block) => block.timestamp, ['desc']);
+}
+
 module.exports = {
-  processor
+  processor,
+  takeawayProcessor
 };

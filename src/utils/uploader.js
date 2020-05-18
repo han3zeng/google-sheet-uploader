@@ -13,8 +13,12 @@ const s3 = new AWS.S3({
 
 const targets = [
   {
-    fileName: 'editor.json',
-    path: path.resolve(__dirname, '../../dist/editor.json')
+    fileName: 'content.json',
+    path: path.resolve(__dirname, '../../dist/content.json')
+  },
+  {
+    fileName: 'takeaway.json',
+    path: path.resolve(__dirname, '../../dist/takeaway.json')
   }
 ];
 
