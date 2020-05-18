@@ -112,7 +112,7 @@ function takeawayProcessor (rows) {
     if (index !== 0) {
       res.push({
         time: row[keys.indexOf(TIME)],
-        timestamp: (new Date(row[keys.indexOf(TIME)])).getTime(),
+        timestamp: (new Date(`${row[keys.indexOf(TIME)]} GMT+08:00`)).getTime(),
         title: row[keys.indexOf(TITLE)],
         type: row[keys.indexOf(TYPE)]
       });
