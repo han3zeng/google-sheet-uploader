@@ -73,7 +73,7 @@ function processor (rows) {
           block = createBlock({
             title: row[KEYS.indexOf(TITLE)],
             time: blockIndex,
-            timestamp: (new Date(blockIndex)).getTime()
+            timestamp: (new Date(`${blockIndex} GMT+08:00`)).getTime()
           });
           content = [];
         }
@@ -82,7 +82,7 @@ function processor (rows) {
           block = createBlock({
             title: row[KEYS.indexOf(TITLE)],
             time: blockIndex,
-            timestamp: (new Date(blockIndex)).getTime()
+            timestamp: (new Date(`${blockIndex} GMT+08:00`)).getTime()
           });
         }
         if (row[KEYS.indexOf(TYPE)] !== TYPES.title) {
