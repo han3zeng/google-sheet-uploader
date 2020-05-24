@@ -30,7 +30,8 @@ const uploadFile = (targets) => {
       Bucket: BUCKET_NAME,
       Key: `${DIRECTORY_NAME}/${fileName}`,
       Body: fileContent,
-      ContentType: 'application/json'
+      ContentType: 'application/json',
+      CacheControl: 'max-age=300'
     };
     s3.putObject(params, function (err, data) {
       if (err) {
