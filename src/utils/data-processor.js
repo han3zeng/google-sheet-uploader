@@ -102,7 +102,7 @@ function processor (rows) {
   return _.orderBy(results, (block) => block.timestamp, ['desc']);
 }
 
-function takeawayProcessor (rows) {
+function keyEventsProcessor (rows) {
   const res = [];
   const TIME = 'time';
   const TITLE = 'title';
@@ -123,5 +123,5 @@ function takeawayProcessor (rows) {
 
 module.exports = {
   processor,
-  takeawayProcessor
+  keyEventsProcessor
 };

@@ -17,8 +17,8 @@ const targets = [
     path: path.resolve(__dirname, '../../dist/content.json')
   },
   {
-    fileName: 'takeaway.json',
-    path: path.resolve(__dirname, '../../dist/takeaway.json')
+    fileName: 'key-events.json',
+    path: path.resolve(__dirname, '../../dist/key-events.json')
   }
 ];
 
