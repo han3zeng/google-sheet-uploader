@@ -5,28 +5,51 @@ const _ = {
 };
 
 const TIME = 'time';
-const TITLE = 'title';
 const TYPE = 'type';
-const TEXT = 'text';
+const CONTENT = 'content';
 const URL = 'url';
 const CAPTION = 'caption';
+const WHO = 'who';
 
-const KEYS = [TIME, TITLE, TYPE, TEXT, URL, CAPTION];
+const KEYS = [TIME, TYPE, CONTENT, URL, CAPTION, WHO];
 
+// Type:
+// 1. TEXT
+// - strong
+// - link
+// 2. IMAGE
+// - caption
+// 3. FURTHERLINK
+// 4. EMBEDEDVIDEO
+// 5. EMVEDEDPOST
+// 6. VIDEO
+// 7. QUOTE
+// 8. TIME
 
 const TYPES = {
-  image: 'IMAGE',
-  video: 'VIDEO',
   text: 'TEXT',
-  title: 'TITLE'
+  image: 'IMAGE',
+  furtherLink: 'FURTHERLINK',
+  embededVideo: 'EMBEDEDVIDEO',
+  embededPost: 'EMVEDEDPOST',
+  video: 'VIDEO',
+  quote: 'QUOTE',
+  time: 'TIME'
 };
 
 const createElement = ({
   type,
-  text,
+  content,
   url,
-  caption
+  caption,
+  who
 }) => {
+  if (type === TYPES.text) {
+    return {
+      type,
+      content
+    };
+  }
   if (type === TYPES.image || type === TYPES.video) {
     return {
       type,
@@ -34,22 +57,35 @@ const createElement = ({
       caption
     };
   }
-  if (type === TYPES.text) {
+  if (type === TYPES.furtherLink) {
     return {
       type,
-      text
+      content,
+      url
     };
   }
-  return undefined;
+  if (type === TYPES.embededVideo || type === TYPES.embededPost) {
+    return {
+      type,
+      content
+    };
+  }
+  if (type === TYPES.quote) {
+    return {
+      type,
+      url,
+      content,
+      who
+    };
+  }
+  return null;
 };
 
 const createBlock = ({
-  title,
   time,
   timestamp
 }) => {
   return {
-    title: title,
     time,
     timestamp
   };
@@ -60,37 +96,33 @@ function processor (rows) {
   let content = [];
   let blockIndex = null;
   let block = createBlock({
-    title: '',
     time: ''
   });
   rows.forEach((row, index) => {
     if (Array.isArray(row) && row.length !== 0) {
       if (index !== 0) {
-        if (row[KEYS.indexOf(TYPE)] === TYPES.title && blockIndex && row[KEYS.indexOf(TIME)] !== blockIndex) {
+        if (row[KEYS.indexOf(TYPE)] === TYPES.time && blockIndex && row[KEYS.indexOf(TIME)] !== blockIndex) {
           block.content = [...content];
           results.push(block);
           blockIndex = row[KEYS.indexOf(TIME)];
           block = createBlock({
-            title: row[KEYS.indexOf(TITLE)],
             time: blockIndex,
             timestamp: (new Date(`${blockIndex} GMT+08:00`)).getTime()
           });
           content = [];
-        }
-        if (!blockIndex && row[KEYS.indexOf(TYPE)] === TYPES.title) {
+        } else if (!blockIndex && row[KEYS.indexOf(TYPE)] === TYPES.time) {
           blockIndex = row[KEYS.indexOf(TIME)];
           block = createBlock({
-            title: row[KEYS.indexOf(TITLE)],
             time: blockIndex,
             timestamp: (new Date(`${blockIndex} GMT+08:00`)).getTime()
           });
-        }
-        if (row[KEYS.indexOf(TYPE)] !== TYPES.title) {
+        } else if (row[KEYS.indexOf(TYPE)] !== TYPES.time) {
           const elem = createElement({
             type: row[KEYS.indexOf(TYPE)],
-            text: row[KEYS.indexOf(TEXT)],
+            content: row[KEYS.indexOf(CONTENT)],
             url: row[KEYS.indexOf(URL)],
-            caption: row[KEYS.indexOf(CAPTION)]
+            caption: row[KEYS.indexOf(CAPTION)],
+            who: row[KEYS.indexOf(WHO)]
           });
           content.push(elem);
         }
@@ -105,16 +137,14 @@ function processor (rows) {
 function keyEventsProcessor (rows) {
   const res = [];
   const TIME = 'time';
-  const TITLE = 'title';
-  const TYPE = 'TYPE';
-  const keys = [TIME, TITLE, TYPE];
+  const TEXT = 'text';
+  const keys = [TIME, TEXT];
   rows.forEach((row, index) => {
     if (index !== 0) {
       res.push({
         time: row[keys.indexOf(TIME)],
         timestamp: (new Date(`${row[keys.indexOf(TIME)]} GMT+08:00`)).getTime(),
-        title: row[keys.indexOf(TITLE)],
-        type: row[keys.indexOf(TYPE)]
+        text: row[keys.indexOf(TEXT)]
       });
     }
   });
