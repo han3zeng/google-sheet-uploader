@@ -21,7 +21,7 @@ const KEYS = [TIME, TYPE, CONTENT, URL, CAPTION, WHO];
 // - caption
 // 3. FURTHERLINK
 // 4. EMBEDEDVIDEO
-// 5. EMVEDEDPOST
+// 5. EMBEDEDPOST
 // 6. VIDEO
 // 7. QUOTE
 // 8. TIME
@@ -31,7 +31,7 @@ const TYPES = {
   image: 'IMAGE',
   furtherLink: 'FURTHERLINK',
   embededVideo: 'EMBEDEDVIDEO',
-  embededPost: 'EMVEDEDPOST',
+  embededPost: 'EMBEDEDPOST',
   video: 'VIDEO',
   quote: 'QUOTE',
   time: 'TIME'
