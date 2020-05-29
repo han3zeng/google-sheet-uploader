@@ -13,8 +13,8 @@ fetch data from google sheet and upload it to s3 server
 2. IMAGE
     * caption
 3. FURTHERLINK
-4. EMBEDEDVIDEO
-5. EMVEDEDPOST
+4. EMBEDDEDVIDEO
+5. EMBEDDEDPOST
 6. VIDEO
 7. QUOTE
 8. TIME

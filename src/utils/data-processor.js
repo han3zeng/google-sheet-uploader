@@ -20,8 +20,8 @@ const KEYS = [TIME, TYPE, CONTENT, URL, CAPTION, WHO];
 // 2. IMAGE
 // - caption
 // 3. FURTHERLINK
-// 4. EMBEDEDVIDEO
-// 5. EMBEDEDPOST
+// 4. EMBEDDEDVIDEO
+// 5. EMBEDDEDPOST
 // 6. VIDEO
 // 7. QUOTE
 // 8. TIME
@@ -30,8 +30,8 @@ const TYPES = {
   text: 'TEXT',
   image: 'IMAGE',
   furtherLink: 'FURTHERLINK',
-  embededVideo: 'EMBEDEDVIDEO',
-  embededPost: 'EMBEDEDPOST',
+  embeddedVideo: 'EMBEDDEDVIDEO',
+  embeddedPost: 'EMBEDDEDPOST',
   video: 'VIDEO',
   quote: 'QUOTE',
   time: 'TIME'
@@ -64,7 +64,7 @@ const createElement = ({
       url
     };
   }
-  if (type === TYPES.embededVideo || type === TYPES.embededPost) {
+  if (type === TYPES.embeddedVideo || type === TYPES.embeddedPost) {
     return {
       type,
       content
