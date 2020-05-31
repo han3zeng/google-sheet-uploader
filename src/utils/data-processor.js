@@ -5,13 +5,14 @@ const _ = {
 };
 
 const TIME = 'time';
+const TITLE = 'title';
 const TYPE = 'type';
 const CONTENT = 'content';
 const URL = 'url';
 const CAPTION = 'caption';
 const WHO = 'who';
 
-const KEYS = [TIME, TYPE, CONTENT, URL, CAPTION, WHO];
+const KEYS = [TIME, TYPE, TITLE, CONTENT, URL, CAPTION, WHO];
 
 // Type:
 // 1. TEXT
@@ -83,11 +84,13 @@ const createElement = ({
 
 const createBlock = ({
   time,
-  timestamp
+  timestamp,
+  title
 }) => {
   return {
     time,
-    timestamp
+    timestamp,
+    title
   };
 };
 
@@ -107,14 +110,16 @@ function processor (rows) {
           blockIndex = row[KEYS.indexOf(TIME)];
           block = createBlock({
             time: blockIndex,
-            timestamp: (new Date(`${blockIndex} GMT+08:00`)).getTime()
+            timestamp: (new Date(`${blockIndex} GMT+08:00`)).getTime(),
+            title: row[KEYS.indexOf(TITLE)]
           });
           content = [];
         } else if (!blockIndex && row[KEYS.indexOf(TYPE)] === TYPES.time) {
           blockIndex = row[KEYS.indexOf(TIME)];
           block = createBlock({
             time: blockIndex,
-            timestamp: (new Date(`${blockIndex} GMT+08:00`)).getTime()
+            timestamp: (new Date(`${blockIndex} GMT+08:00`)).getTime(),
+            title: row[KEYS.indexOf(TITLE)]
           });
         } else if (row[KEYS.indexOf(TYPE)] !== TYPES.time) {
           const elem = createElement({
