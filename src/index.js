@@ -49,7 +49,7 @@ function listMajors (auth) {
   // Content
   sheets.spreadsheets.values.get({
     spreadsheetId: '14MvZOZJMpxPXyzZI0UUcvGz6Bmti_CA-_zlNZDIgMf0',
-    range: 'Content!A:F'
+    range: 'Content!A:G'
   }, (err, res) => {
     if (err) return console.log('The API returned an error: ' + err);
     const rows = res.data.values;
@@ -67,7 +67,7 @@ function listMajors (auth) {
   // KeyEvents
   sheets.spreadsheets.values.get({
     spreadsheetId: '14MvZOZJMpxPXyzZI0UUcvGz6Bmti_CA-_zlNZDIgMf0',
-    range: 'KeyEvents!A:C'
+    range: 'KeyEvents!A:B'
   }, (err, res) => {
     if (err) return console.log('The API returned an error: ' + err);
     const rows = res.data.values;
