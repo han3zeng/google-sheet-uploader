@@ -1,111 +1,70 @@
 const fs = require('fs');
-const readline = require('readline');
-const { google } = require('googleapis');
 const path = require('path');
 const CLINET_SECRET = path.resolve(__dirname, '../client_secret.json');
 const TOKEN_PATH = path.resolve(__dirname, '../token.json');
+// If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
-const { writeFile } = require('./utils/index');
-const { processor, keyEventsProcessor } = require('./utils/data-processor');
-const logger = require('./utils/create-logger');
+const getSpreadsheetData = require('./utils/fetch-from-spreadsheet');
+const {
+  sheetDataProcessor
+} = require('./utils/data-processor/covid-19-dashboard');
+const {
+  writeFile
+} = require('./utils/index');
+const { logger, getLogObject } = require('./utils/create-logger');
+// The file token.json stores the user's access and refresh tokens, and is
+// created automatically when the authorization flow completes for the first
+// time.
 
-function getNewToken (oAuth2Client, callback) {
-  const authUrl = oAuth2Client.generateAuthUrl({
-    access_type: 'offline',
-    scope: SCOPES,
-  });
-  console.log('Authorize this app by visiting this url:', authUrl);
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
-  rl.question('Enter the code from that page here: ', (code) => {
-    rl.close();
-    oAuth2Client.getToken(code, (err, token) => {
-      if (err) return console.error('Error while trying to retrieve access token', err);
-      oAuth2Client.setCredentials(token);
-      // Store the token to disk for later program executions
-      fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err) return console.error(err);
-        console.log('Token stored to', TOKEN_PATH);
-      });
-      callback(oAuth2Client);
-    });
-  });
-}
+function createDirectories () {
+  const distTargetDirectory = path.resolve(__dirname, '../dist');
+  const logsTargetDirectory = path.resolve(__dirname, '../logs');
 
-function authorize (credentials, callback) {
-  const {client_secret, client_id, redirect_uris} = credentials.web;
-  const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
-  fs.readFile(TOKEN_PATH, (err, token) => {
-    if (err) return getNewToken(oAuth2Client, callback);
-    oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client);
-  });
-}
+  const allDirs = [distTargetDirectory, logsTargetDirectory];
 
-function listMajors (auth) {
-  const sheets = google.sheets({ version: 'v4', auth });
-  // Content
-  sheets.spreadsheets.values.get({
-    spreadsheetId: '14MvZOZJMpxPXyzZI0UUcvGz6Bmti_CA-_zlNZDIgMf0',
-    range: 'Content!A:G'
-  }, (err, res) => {
-    if (err) return console.log('The API returned an error: ' + err);
-    const rows = res.data.values;
-    if (rows.length) {
-      // Print columns A and E, which correspond to indices 0 and 4.
-      const result = processor(rows);
-      writeFile({
-        result,
-        fileName: 'content'
+  allDirs.forEach(target => {
+    if (!fs.existsSync(target)) {
+      fs.mkdir(target, { recursive: true }, err => {
+        if (err) throw err;
       });
-    } else {
-      console.log('No data found.');
-    }
-  });
-  // KeyEvents
-  sheets.spreadsheets.values.get({
-    spreadsheetId: '14MvZOZJMpxPXyzZI0UUcvGz6Bmti_CA-_zlNZDIgMf0',
-    range: 'KeyEvents!A:B'
-  }, (err, res) => {
-    if (err) return console.log('The API returned an error: ' + err);
-    const rows = res.data.values;
-    if (rows.length) {
-      // Print columns A and E, which correspond to indices 0 and 4.
-      const result = keyEventsProcessor(rows);
-      writeFile({
-        result,
-        fileName: 'key-events'
-      });
-    } else {
-      console.log('No data found.');
     }
   });
 }
 
 try {
-  (function createDirectories () {
-    const distTargetDirectory = path.resolve(__dirname, '../dist');
-    const logsTargetDirectory = path.resolve(__dirname, '../logs');
-
-    const allDirs = [distTargetDirectory, logsTargetDirectory];
-
-    allDirs.forEach((target) => {
-      if (!fs.existsSync(target)) {
-        fs.mkdir(target, { recursive: true }, (err) => {
-          if (err) throw err;
-        });
-      }
+  createDirectories();
+  getSpreadsheetData({
+    tokenPath: TOKEN_PATH,
+    clientSecret: CLINET_SECRET,
+    scopes: SCOPES
+  })
+    .then(rawSpreadsheet => {
+      const spreadsheet = sheetDataProcessor({
+        rawData: rawSpreadsheet
+      });
+      writeFile({
+        result: spreadsheet,
+        fileName: 'content-covid-19-dashboard',
+        fileExtension: 'json'
+      });
+    })
+    .catch(({ message, error }) => {
+      logger.log(
+        getLogObject({
+          level: 'error',
+          message,
+          error,
+          filename: 'index.js'
+        })
+      );
     });
-  })();
-  fs.readFile(CLINET_SECRET, (err, content) => {
-    if (err) return console.log('Error loading client secret file:', err);
-    authorize(JSON.parse(content), listMajors);
-  });
 } catch (e) {
-  logger.log({
-    level: 'error',
-    message: `top level - exception ${e}`
-  });
-};
+  logger.log(
+    getLogObject({
+      level: 'error',
+      message: 'main error',
+      error: e,
+      filename: 'index.js'
+    })
+  );
+}

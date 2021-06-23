@@ -1,23 +1,26 @@
 const fs = require('fs');
 const path = require('path');
-const logger = require('./create-logger');
+const { logger, getLogObject } = require('./create-logger');
 
 // const fileName = 'editor';
 const targetDirectory = path.resolve(__dirname, '../../dist');
-const fileExtension = 'json';
 
-const writeFile = ({ result, fileName }) => {
+const writeFile = ({ result, fileName, fileExtension }) => {
   fs.writeFile(`${targetDirectory}/${fileName}.${fileExtension}`, JSON.stringify(result, null, 2), (err) => {
     if (err) {
-      logger.log({
+      logger.log(getLogObject({
         level: 'error',
-        message: `fail to write file: ${fileName}: ${err}`
-      });
+        message: `fail to write file: ${fileName}: ${err}`,
+        error: err,
+        filename: 'util/index.js'
+      }));
     } else {
-      logger.log({
+      logger.log(getLogObject({
         level: 'info',
-        message: `write file ${fileName} successfully`
-      });
+        message: `write file ${fileName} successfully`,
+        error: null,
+        filename: 'util/index.js'
+      }));
     }
   });
 };

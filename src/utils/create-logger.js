@@ -1,23 +1,36 @@
-const path = require('path');
 const { createLogger, format, transports } = require('winston');
-
-const targetDirectory = path.resolve(__dirname, '../../logs');
+const { timestamp, json, prettyPrint } = format;
+const path = require('path');
+const base = path.resolve(__dirname, '../../logs');
 
 const logger = createLogger({
-  level: 'info',
   format: format.combine(
-    format.timestamp({
+    timestamp({
       format: 'YYYY-MM-DD HH:mm:ss'
     }),
-    format.errors({ stack: true }),
-    format.splat(),
-    format.json()
+    json(),
+    prettyPrint()
   ),
-  defaultMeta: { service: 'google-sheet-uploader' },
+  defaultMeta: { service: 'spreadsheet-to-s3' },
   transports: [
-    new transports.File({ filename: `${targetDirectory}/error.log`, level: 'error' }),
-    new transports.File({ filename: `${targetDirectory}/history.log` })
+    new transports.File({ filename: `${base}/error.log`, level: 'error' }),
+    new transports.File({ filename: `${base}/history.log`, level: 'info' })
   ]
 });
 
-module.exports = logger;
+const getLogObject = ({
+  level = null,
+  filename = null,
+  message = null,
+  error = null
+}) => ({
+  level,
+  filename,
+  message,
+  error
+});
+
+module.exports = {
+  logger,
+  getLogObject
+};

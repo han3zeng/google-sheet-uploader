@@ -1,14 +1,13 @@
 {
-  "extends": "standard",
+  "env": {
+    "es6": true
+  },
+  "extends": ["standard"],
   "rules": {
     "semi": [2, 'always']
   },
-  "globals": {
-    "describe": "writable",
-    "it": "writable",
-    "before": "writable",
-    "after": "writable",
-    "beforeAll": "writable",
-    "afterAll": "writable"
+   "parserOptions": {
+     "ecmaVersion": 9,
+     "sourceType": "module"
   }
 }
