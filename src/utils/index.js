@@ -11,8 +11,8 @@ const writeFile = ({ result, fileName, fileExtension }) => {
       if (err) {
         reject({
           err,
-          fileName,
-        })
+          fileName
+        });
       } else {
         logger.log(getLogObject({
           level: 'info',

@@ -4,7 +4,8 @@
   },
   "extends": ["standard"],
   "rules": {
-    "semi": [2, 'always']
+    "semi": [2, 'always'],
+    "prefer-promise-reject-errors": "off",
   },
    "parserOptions": {
      "ecmaVersion": 9,
