@@ -20,8 +20,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./src/index.js",
-    "upload": "node ./src/utils/uploader.js"
+    "start": "node ./src/index.js"
   },
   "repository": {
     "type": "git",
