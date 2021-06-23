@@ -10,6 +10,8 @@ async function getSpreadsheetData({
   tokenPath,
   clientSecret,
   scopes,
+  spreadsheetId,
+  range
 }) {
   let promise = new Promise((resolve, reject) => {
     // Load client secrets from a local file.
@@ -103,8 +105,8 @@ async function getSpreadsheetData({
         auth
       });
       sheets.spreadsheets.values.get({
-        spreadsheetId: '1NwXx8Pqx_wR0O3YrpmxnWwiMv_M-6qzXu5giH566QHY',
-        range: 'A2:I',
+        spreadsheetId,
+        range,
       }, (err, res) => {
         if (err) return reject({
           message: 'The spreadsheet API returned an error:',

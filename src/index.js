@@ -11,10 +11,20 @@ const {
 const {
   writeFile
 } = require('./utils/index');
+const uploadFile = require('./utils/uploader');
 const { logger, getLogObject } = require('./utils/create-logger');
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
+const BUCKET_NAME = 'tpts-public';
+const DIRECTORY_NAME = 'covid-19-dashboard';
+
+const targets = [
+  {
+    fileName: 'content-covid-19-dashboard.json',
+    path: path.resolve(__dirname, '../dist/content-covid-19-dashboard.json')
+  }
+];
 
 function createDirectories () {
   const distTargetDirectory = path.resolve(__dirname, '../dist');
@@ -36,7 +46,9 @@ try {
   getSpreadsheetData({
     tokenPath: TOKEN_PATH,
     clientSecret: CLINET_SECRET,
-    scopes: SCOPES
+    scopes: SCOPES,
+    spreadsheetId: '1NwXx8Pqx_wR0O3YrpmxnWwiMv_M-6qzXu5giH566QHY',
+    range: 'A2:I'
   })
     .then(rawSpreadsheet => {
       const spreadsheet = sheetDataProcessor({
@@ -46,7 +58,27 @@ try {
         result: spreadsheet,
         fileName: 'content-covid-19-dashboard',
         fileExtension: 'json'
-      });
+      })
+        .then(() => {
+          uploadFile({
+            targets,
+            contentType: 'application/json',
+            cacheControl: 'max-age=43200',
+            bucketName: BUCKET_NAME,
+            directoryName: DIRECTORY_NAME
+          });
+        })
+        .catch(({
+          err,
+          fileName
+        }) => {
+          logger.log(getLogObject({
+            level: 'error',
+            message: `fail to write file: ${fileName}: ${err}`,
+            error: err,
+            filename: 'util/index.js'
+          }));
+        });
     })
     .catch(({ message, error }) => {
       logger.log(
