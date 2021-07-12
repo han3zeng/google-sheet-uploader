@@ -106,5 +106,9 @@ dist
 # credentials
 token.json
 client_secret.json
-old-token.json
-old-client_secret.json
+
+# system
+.DS_Store
+
+# Dev
+update.sh
