@@ -18,11 +18,12 @@ const { logger, getLogObject } = require('./utils/create-logger');
 // time.
 const BUCKET_NAME = 'tpts-public';
 const DIRECTORY_NAME = 'covid-19-dashboard';
+const FILE_NAME = 'content-covid-19-dashboard-v2';
 
 const targets = [
   {
-    fileName: 'content-covid-19-dashboard.json',
-    path: path.resolve(__dirname, '../dist/content-covid-19-dashboard.json')
+    fileName: `${FILE_NAME}.json`,
+    path: path.resolve(__dirname, `../dist/${FILE_NAME}.json`)
   }
 ];
 
@@ -48,7 +49,7 @@ try {
     clientSecret: CLINET_SECRET,
     scopes: SCOPES,
     spreadsheetId: '1NwXx8Pqx_wR0O3YrpmxnWwiMv_M-6qzXu5giH566QHY',
-    range: 'A2:I'
+    range: 'v2!A2:L'
   })
     .then(rawSpreadsheet => {
       const spreadsheet = sheetDataProcessor({
@@ -56,17 +57,17 @@ try {
       });
       writeFile({
         result: spreadsheet,
-        fileName: 'content-covid-19-dashboard',
+        fileName: FILE_NAME,
         fileExtension: 'json'
       })
         .then(() => {
-          uploadFile({
-            targets,
-            contentType: 'application/json',
-            cacheControl: 'max-age=43200',
-            bucketName: BUCKET_NAME,
-            directoryName: DIRECTORY_NAME
-          });
+          // uploadFile({
+          //   targets,
+          //   contentType: 'application/json',
+          //   cacheControl: 'max-age=43200',
+          //   bucketName: BUCKET_NAME,
+          //   directoryName: DIRECTORY_NAME
+          // });
         })
         .catch(({
           err,
