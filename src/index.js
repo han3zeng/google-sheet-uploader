@@ -61,13 +61,13 @@ try {
         fileExtension: 'json'
       })
         .then(() => {
-          // uploadFile({
-          //   targets,
-          //   contentType: 'application/json',
-          //   cacheControl: 'max-age=43200',
-          //   bucketName: BUCKET_NAME,
-          //   directoryName: DIRECTORY_NAME
-          // });
+          uploadFile({
+            targets,
+            contentType: 'application/json',
+            cacheControl: 'max-age=43200',
+            bucketName: BUCKET_NAME,
+            directoryName: DIRECTORY_NAME
+          });
         })
         .catch(({
           err,
