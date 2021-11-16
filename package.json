@@ -4,7 +4,7 @@
   "description": "fetch data from google sheet and upload it to s3 server",
   "main": "src/index.js",
   "dependencies": {
-    "aws-sdk": "^2.673.0",
+    "aws-sdk": "^2.814.0",
     "dotenv": "^8.2.0",
     "googleapis": "^50.0.0",
     "lodash": "^4.17.15",
